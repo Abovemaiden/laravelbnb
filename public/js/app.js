@@ -1885,7 +1885,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
     title: String,
-    content: String
+    description: String
   }
 });
 
@@ -1902,9 +1902,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _BookableListItem_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BookableListItem.vue */ "./resources/js/bookables/BookableListItem.vue");
-//
-//
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _BookableListItem_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./BookableListItem.vue */ "./resources/js/bookables/BookableListItem.vue");
 //
 //
 //
@@ -1920,9 +1920,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
-    BookableListItem: _BookableListItem_vue__WEBPACK_IMPORTED_MODULE_0__.default
+    BookableListItem: _BookableListItem_vue__WEBPACK_IMPORTED_MODULE_1__.default
   },
   data: function data() {
     return {
@@ -1947,32 +1948,19 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this = this;
 
-    this.loading = true;
-    setTimeout(function () {
-      _this.bookables = [{
-        title: 'Cheap Villa',
-        content: 'A very cheap villa'
-      }, {
-        title: 'Cheap Villa 2',
-        content: 'A very cheap villa 2'
-      }, {
-        title: 'Cheap Villa 3',
-        content: 'A very cheap villa 3'
-      }, {
-        title: 'Cheap Villa 4',
-        content: 'A very cheap villa 4'
-      }, {
-        title: 'Cheap Villa 5',
-        content: 'A very cheap villa 5'
-      }, {
-        title: 'Cheap Villa 6',
-        content: 'A very cheap villa 6'
-      }, {
-        title: 'Cheap Villa 7',
-        content: 'A very cheap villa 7'
-      }];
+    this.loading = true; // const p = new Promise((resolve, reject) => {
+    // 	console.log(resolve);
+    // 	console.log(reject);
+    // 	setTimeout(() => reject('Hello'), 2000);
+    // })
+    // 	.then((result) => console.log(`Success ${result}`))
+    // 	.catch((error) => console.log(`Error ${error}`));
+    // console.log(p);
+
+    var request = axios__WEBPACK_IMPORTED_MODULE_0___default().get('/api/bookables').then(function (response) {
+      _this.bookables = response.data;
       _this.loading = false;
-    }, 2000);
+    });
   }
 });
 
@@ -37738,11 +37726,11 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "card" }, [
+  return _c("div", { staticClass: "card w-100" }, [
     _c("div", { staticClass: "card-body" }, [
       _c("h5", { staticClass: "card-title" }, [_vm._v(_vm._s(_vm.title))]),
       _vm._v(" "),
-      _c("p", { staticClass: "card-text" }, [_vm._v(_vm._s(_vm.content))])
+      _c("p", { staticClass: "card-text" }, [_vm._v(_vm._s(_vm.description))])
     ])
   ])
 }
@@ -37777,17 +37765,20 @@ var render = function() {
           _vm._l(_vm.rows, function(row) {
             return _c(
               "div",
-              { key: "row" + row, staticClass: "row" },
+              { key: "row" + row, staticClass: "row mb-4" },
               [
                 _vm._l(_vm.bookablesInRow(row), function(bookable, column) {
                   return _c(
                     "div",
-                    { key: "row" + row + column, staticClass: "col" },
+                    {
+                      key: "row" + row + column,
+                      staticClass: "col d-flex align-items-stretch"
+                    },
                     [
                       _c("bookable-list-item", {
                         attrs: {
                           title: bookable.title,
-                          content: bookable.content,
+                          description: bookable.description,
                           price: bookable.price
                         }
                       })
@@ -53113,6 +53104,18 @@ Vue.compile = compileToFunctions;
 /******/ 	// It's empty as some runtime module handles the default behavior
 /******/ 	__webpack_require__.x = x => {};
 /************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
