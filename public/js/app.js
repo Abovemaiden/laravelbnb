@@ -1853,6 +1853,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({});
 
 /***/ }),
@@ -37526,17 +37531,36 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c("router-link", { attrs: { to: "/" } }, [_vm._v("Home")]),
-      _vm._v(" "),
-      _c("router-link", { attrs: { to: "/second" } }, [_vm._v("Second")]),
-      _vm._v(" "),
-      _c("router-view")
-    ],
-    1
-  )
+  return _c("div", [
+    _c(
+      "nav",
+      { staticClass: "navbar bg-white border-bottom navbar-light" },
+      [
+        _c(
+          "router-link",
+          {
+            staticClass: "navbar-brand mr-auto",
+            attrs: { to: { name: "home" } }
+          },
+          [_vm._v("LaravelBnb")]
+        ),
+        _vm._v(" "),
+        _c(
+          "router-link",
+          { staticClass: "btn nav-button", attrs: { to: { name: "second" } } },
+          [_vm._v("Second")]
+        )
+      ],
+      1
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "container mt-4 mb-4 pr-4 pl-4" },
+      [_c("router-view")],
+      1
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -37577,7 +37601,7 @@ var staticRenderFns = [
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "card-body" }, [
-              _vm._v("\n          I'm an example component.\n        ")
+              _vm._v("\n\t\t\t\t\tI'm an example component.\n\t\t\t\t")
             ])
           ])
         ])
