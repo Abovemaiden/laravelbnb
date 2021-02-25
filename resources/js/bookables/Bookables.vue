@@ -13,42 +13,42 @@
 </template>
 
 <script>
-import axios from 'axios';
-import BookableListItem from './BookableListItem.vue';
-export default {
-  components: {
-    BookableListItem,
-  },
-  data() {
-    return {
-      bookables: null,
-      loading: false,
-      columns: 3,
-    };
-  },
-  computed: {
-    rows() {
-      return this.bookables == null ? 0 : Math.ceil(this.bookables.length / this.columns);
+  import axios from 'axios';
+  import BookableListItem from './BookableListItem';
+  export default {
+    components: {
+      BookableListItem,
     },
-  },
-  methods: {
-    bookablesInRow(row) {
-      return this.bookables.slice((row - 1) * this.columns, row * this.columns);
+    data() {
+      return {
+        bookables: null,
+        loading: false,
+        columns: 3,
+      };
     },
-    placeholdersInRow(row) {
-      return this.columns - this.bookablesInRow(row).length;
+    computed: {
+      rows() {
+        return this.bookables == null ? 0 : Math.ceil(this.bookables.length / this.columns);
+      },
     },
-  },
-  created() {
-    this.loading = true;
+    methods: {
+      bookablesInRow(row) {
+        return this.bookables.slice((row - 1) * this.columns, row * this.columns);
+      },
+      placeholdersInRow(row) {
+        return this.columns - this.bookablesInRow(row).length;
+      },
+    },
+    created() {
+      this.loading = true;
 
-    const request = axios.get('/api/bookables').then(response => {
-      console.log(response);
-      this.bookables = response.data;
-      this.loading = false;
-    });
-  },
-};
+      const request = axios.get('/api/bookables').then(response => {
+        console.log(response);
+        this.bookables = response.data;
+        this.loading = false;
+      });
+    },
+  };
 </script>
 
 <style></style>

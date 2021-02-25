@@ -10,13 +10,13 @@
 </template>
 
 <script>
-export default {
-  props: {
-    title: String,
-    description: String,
-    id: String,
-  },
-};
+  export default {
+    props: {
+      title: String,
+      description: String,
+      id: String,
+    },
+  };
 </script>
 
 <style></style>
