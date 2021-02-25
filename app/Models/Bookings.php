@@ -6,14 +6,14 @@ use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Bookable extends Model
+class Bookings extends Model
 {
     use HasFactory, Uuids;
 
-    protected $fillable = ['title', 'description'];
+    protected $fillable = ['from', 'to'];
 
-    public function bookings()
+    public function bookables()
     {
-        return $this->hasMany(Bookings::class);
+        return $this->belongsTo(Bookable::class);
     }
 }
