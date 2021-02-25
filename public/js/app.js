@@ -2005,16 +2005,9 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this = this;
 
-    this.loading = true; // const p = new Promise((resolve, reject) => {
-    // 	console.log(resolve);
-    // 	console.log(reject);
-    // 	setTimeout(() => reject('Hello'), 2000);
-    // })
-    // 	.then((result) => console.log(`Success ${result}`))
-    // 	.catch((error) => console.log(`Error ${error}`));
-    // console.log(p);
-
+    this.loading = true;
     var request = axios__WEBPACK_IMPORTED_MODULE_0___default().get('/api/bookables').then(function (response) {
+      console.log(response);
       _this.bookables = response.data;
       _this.loading = false;
     });

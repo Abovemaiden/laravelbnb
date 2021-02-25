@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
+use App\Http\Resources\BookableResource;
 use App\Models\Bookable;
 use Illuminate\Http\Request;
 
@@ -14,7 +16,10 @@ class BookableController extends Controller
      */
     public function index()
     {
-        return Bookable::all();
+        // return Bookable::all();
+        return BookableResource::collection(
+            Bookable::all()
+        );
     }
 
     /**
@@ -36,7 +41,8 @@ class BookableController extends Controller
      */
     public function show($id)
     {
-        return Bookable::findOrFail($id);
+        // return Bookable::findOrFail($id);
+        return new BookableResource(Bookable::findOrFail($id));
     }
 
     /**
