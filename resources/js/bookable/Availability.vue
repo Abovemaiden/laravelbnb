@@ -48,6 +48,9 @@
 <script>
   import axios from 'axios';
   export default {
+    props: {
+      bookableId: String,
+    },
     data() {
       return {
         from: null,
@@ -63,7 +66,7 @@
         this.errors = null;
 
         axios
-          .get(`/api/bookables/${this.$route.params.id}/availability?from=${this.from}&to=${this.to}`)
+          .get(`/api/bookables/${this.bookableId}/availability?from=${this.from}&to=${this.to}`)
           .then(response => {
             this.status = response.status;
           })
