@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\Uuids;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,7 +18,7 @@ class Bookings extends Model
         return $this->belongsTo(Bookable::class);
     }
 
-    public function scopeBetweenDates($query, $from, $to)
+    public function scopeBetweenDates(Builder $query, $from, $to)
     {
         return $query->where('to', '>', $from)
             ->where('from', '<', $to);
