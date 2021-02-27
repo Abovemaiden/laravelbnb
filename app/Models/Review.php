@@ -12,11 +12,11 @@ class Review extends Model
 
     public function bookable()
     {
-        $this->belongsTo(Bookable::class);
+        $this->belongsTo(Bookable::class, 'bookable_id');
     }
 
     public function bookings()
     {
-        $this->belongsTo(Bookings::class);
+        $this->belongsTo(Bookings::class, 'booking_id');
     }
 }

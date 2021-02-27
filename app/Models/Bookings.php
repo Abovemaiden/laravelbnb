@@ -16,7 +16,7 @@ class Bookings extends Model
 
     public function bookables()
     {
-        return $this->belongsTo(Bookable::class);
+        return $this->belongsTo(Bookable::class, 'bookable_id');
     }
 
     public function review()
@@ -33,12 +33,7 @@ class Bookings extends Model
     public static function findByReviewKey(string $reviewKey)
     {
         // return static::where('review_key', $reviewKey)->with('bookables')->get()->first();
-        return Bookings::where('bookable_id', $reviewKey)->with('bookables')->get()->first();
-    }
-
-    public static function findBookingsWithBookables()
-    {
-        return Bookings::with('bookables')->get();
+        return Bookings::where('review_key', $reviewKey)->with('bookables')->get()->first();
     }
 
     protected static function boot()
