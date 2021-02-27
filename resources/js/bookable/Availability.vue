@@ -47,6 +47,7 @@
 
 <script>
   import axios from 'axios';
+  import { is422 } from './../shared/utils/response';
   export default {
     props: {
       bookableId: String,
@@ -71,7 +72,7 @@
             this.status = response.status;
           })
           .catch(error => {
-            if (422 == error.response.status) {
+            if (is422(error)) {
               this.errors = error.response.data.data.errors;
             }
             this.status = error.response.status;

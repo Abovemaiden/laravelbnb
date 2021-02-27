@@ -10,6 +10,12 @@ class Review extends Model
 {
     use HasFactory, Uuids;
 
+    protected $fillable = [
+        'id',
+        'rating',
+        'content'
+    ];
+
     public function bookable()
     {
         $this->belongsTo(Bookable::class, 'bookable_id');
