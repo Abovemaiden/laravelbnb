@@ -2,11 +2,12 @@
   <div>
     <h6 class="text-uppercase text-secondary font-weight-bolder">
       Check Availability
-      <span v-if="noAvailability" class="text-danger">(NOT AVAILABLE)</span>
-      <span v-if="hasAvailability" class="text-success">(AVAILABLE)</span>
+      <transition name="fade">
+        <span v-if="noAvailability" class="text-danger">(NOT AVAILABLE)</span>
+        <span v-if="hasAvailability" class="text-success">(AVAILABLE)</span>
+      </transition>
     </h6>
 
-    <!-- Form Row for Start - End Date -->
     <div class="form-row">
       <div class="form-group col-md-6">
         <label for="from">From</label>
@@ -14,14 +15,12 @@
           type="text"
           name="from"
           class="form-control form-control-sm"
-          placeholder="Start Date"
+          placeholder="Start date"
           v-model="from"
           @keyup.enter="check"
-          :class="[{ 'is-invalid': this.errorFor('from') }]"
+          :class="[{ 'is-invalid': errorFor('from') }]"
         />
-        <div class="invalid-feedback" v-for="(error, index) in this.errorFor('from')" :key="'from' + index">
-          {{ error }}
-        </div>
+        <validation-errors :errors="errorFor('from')"></validation-errors>
       </div>
 
       <div class="form-group col-md-6">
@@ -30,68 +29,69 @@
           type="text"
           name="to"
           class="form-control form-control-sm"
-          placeholder="End Date"
+          placeholder="End date"
           v-model="to"
           @keyup.enter="check"
-          :class="[{ 'is-invalid': this.errorFor('to') }]"
+          :class="[{ 'is-invalid': errorFor('to') }]"
         />
-        <div class="invalid-feedback" v-for="(error, index) in this.errorFor('to')" :key="'to' + index">
-          {{ error }}
-        </div>
+        <validation-errors :errors="errorFor('to')"></validation-errors>
       </div>
     </div>
 
-    <button class="btn btn-secondary btn-block" @click="check" :disabled="loading">Check!</button>
+    <button class="btn btn-secondary btn-block" @click="check" :disabled="loading">
+      <span v-if="!loading">Check!</span>
+      <span v-if="loading"> <i class="fas fa-circle-notch fa-spin"></i> Checking... </span>
+    </button>
   </div>
 </template>
 
 <script>
-  import axios from 'axios';
   import { is422 } from './../shared/utils/response';
+  import validationErrors from './../shared/mixins/validationErrors';
+
   export default {
+    mixins: [validationErrors],
     props: {
-      bookableId: String,
+      bookableId: [String, Number],
     },
     data() {
       return {
-        from: null,
-        to: null,
+        from: this.$store.state.lastSearch.from,
+        to: this.$store.state.lastSearch.to,
         loading: false,
         status: null,
-        errors: null,
       };
     },
     methods: {
-      check() {
+      async check() {
         this.loading = true;
         this.errors = null;
-
-        axios
-          .get(`/api/bookables/${this.bookableId}/availability?from=${this.from}&to=${this.to}`)
-          .then(response => {
-            this.status = response.status;
-          })
-          .catch(error => {
-            if (is422(error)) {
-              this.errors = error.response.data.data.errors;
-            }
-            this.status = error.response.status;
-          })
-          .then(() => (this.loading = false));
-      },
-      errorFor(field) {
-        return this.hasErrors && this.errors[field] ? this.errors[field] : null;
+        this.$store.dispatch('setLastSearch', {
+          from: this.from,
+          to: this.to,
+        });
+        try {
+          this.status = (await axios.get(`/api/bookables/${this.bookableId}/availability?from=${this.from}&to=${this.to}`)).status;
+          this.$emit('availability', this.hasAvailability);
+        } catch (err) {
+          if (is422(err)) {
+            this.errors = err.response.data.errors;
+          }
+          this.status = err.response.status;
+          this.$emit('availability', this.hasAvailability);
+        }
+        this.loading = false;
       },
     },
     computed: {
       hasErrors() {
-        return 422 == this.status && this.errors !== null;
+        return 422 === this.status && this.errors !== null;
       },
       hasAvailability() {
-        return 200 == this.status;
+        return 200 === this.status;
       },
       noAvailability() {
-        return 404 == this.status;
+        return 404 === this.status;
       },
     },
   };
@@ -104,13 +104,11 @@
     color: gray;
     font-weight: bolder;
   }
-
   .is-invalid {
-    border-color: brown;
+    border-color: #b22222;
     background-image: none;
   }
-
   .invalid-feedback {
-    color: brown;
+    color: #b22222;
   }
 </style>
