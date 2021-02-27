@@ -9,7 +9,7 @@
           <div class="col-md-6">Antonio Aradaza</div>
           <div class="col-md-6 d-flex justify-content-end">
             {{ review.rating }}
-            <star-rating :rating="review.rating" class="fa-lg"></star-rating>
+            <star-rating :value="review.rating" class="fa-lg"></star-rating>
           </div>
         </div>
         <div class="row">
@@ -39,7 +39,7 @@
       this.loading = true;
       axios
         .get(`/api/bookables/${this.bookableId}/reviews`)
-        .then(response => (this.reviews = response.data))
+        .then(response => (this.reviews = response.data.data))
         .then(() => (this.loading = false));
       this.loading = false;
     },

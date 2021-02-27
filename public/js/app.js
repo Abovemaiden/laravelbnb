@@ -1945,7 +1945,7 @@ __webpack_require__.r(__webpack_exports__);
         _this.status = response.status;
       })["catch"](function (error) {
         if (422 == error.response.status) {
-          _this.errors = error.response.data.errors;
+          _this.errors = error.response.data.data.errors;
         }
 
         _this.status = error.response.status;
@@ -2029,7 +2029,7 @@ __webpack_require__.r(__webpack_exports__);
 
     this.loading = true;
     axios__WEBPACK_IMPORTED_MODULE_2___default().get("/api/bookables/".concat(this.$route.params.id)).then(function (response) {
-      _this.bookable = response.data;
+      _this.bookable = response.data.data;
       _this.loading = false;
     });
   }
@@ -2091,7 +2091,7 @@ __webpack_require__.r(__webpack_exports__);
 
     this.loading = true;
     axios__WEBPACK_IMPORTED_MODULE_0___default().get("/api/bookables/".concat(this.bookableId, "/reviews")).then(function (response) {
-      return _this.reviews = response.data;
+      return _this.reviews = response.data.data;
     }).then(function () {
       return _this.loading = false;
     });
@@ -2192,7 +2192,7 @@ __webpack_require__.r(__webpack_exports__);
 
     this.loading = true;
     var request = axios__WEBPACK_IMPORTED_MODULE_0___default().get('/api/bookables').then(function (response) {
-      _this.bookables = response.data;
+      _this.bookables = response.data.data;
       _this.loading = false;
     });
   }
@@ -2211,6 +2211,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -2230,7 +2232,45 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({});
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  data: function data() {
+    return {
+      review: {
+        rating: 5,
+        content: null
+      },
+      existingReview: null,
+      loading: false
+    };
+  },
+  created: function created() {
+    var _this = this;
+
+    this.loading = true; // 1. If review already exists
+    // console.log(response.data.data);
+
+    axios__WEBPACK_IMPORTED_MODULE_0___default().get("/api/reviews/".concat(this.$route.params.id)).then(function (response) {
+      return _this.existingReview = response.data.data;
+    })["catch"](function (err) {}).then(function () {
+      return _this.loading = false;
+    }); // 2. Fetch a booking by review key
+    // 3. Store the review
+  },
+  computed: {
+    alreadyReviewed: function alreadyReviewed() {
+      return this.existingReview !== null;
+    }
+  }
+});
 
 /***/ }),
 
@@ -2255,19 +2295,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
-    rating: Number
+    value: Number
   },
   computed: {
     halfStar: function halfStar() {
-      var fraction = Math.round((this.rating - Math.floor(this.rating)) * 100);
+      var fraction = Math.round((this.value - Math.floor(this.value)) * 100);
       return fraction > 0 && fraction < 50;
     },
     fullStars: function fullStars() {
       // > 4.5 = 5
-      return Math.round(this.rating);
+      return Math.round(this.value);
     },
     emptyStars: function emptyStars() {
-      return 5 - Math.ceil(this.rating);
+      return 5 - Math.ceil(this.value);
     }
   },
   created: function created() {}
@@ -60505,7 +60545,7 @@ var render = function() {
                       ),
                       _c("star-rating", {
                         staticClass: "fa-lg",
-                        attrs: { rating: review.rating }
+                        attrs: { value: review.rating }
                       })
                     ],
                     1
@@ -60658,43 +60698,80 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c(
-      "div",
-      { staticClass: "form-group" },
-      [
-        _c("label", { staticClass: "text-muted" }, [
-          _vm._v("Select the star rating (1 is worst - 5 is best)")
-        ]),
-        _vm._v(" "),
-        _c("star-rating", { staticClass: "fa-3x", attrs: { rating: 5 } })
-      ],
-      1
-    ),
-    _vm._v(" "),
-    _vm._m(0),
-    _vm._v(" "),
-    _c("button", { staticClass: "btn btn-lg btn-primary btn-block" }, [
-      _vm._v("Submit")
-    ])
+    _vm.loading
+      ? _c("div", [_vm._v("Loading...")])
+      : _c("div", [
+          _vm.alreadyReviewed
+            ? _c("div", [
+                _c("h3", [
+                  _vm._v(
+                    "You've already review left a review for this booking!"
+                  )
+                ])
+              ])
+            : _c("div", [
+                _c(
+                  "div",
+                  { staticClass: "form-group" },
+                  [
+                    _c("label", { staticClass: "text-muted" }, [
+                      _vm._v("Select the star rating (1 is worst - 5 is best)")
+                    ]),
+                    _vm._v(" "),
+                    _c("star-rating", {
+                      staticClass: "fa-3x",
+                      model: {
+                        value: _vm.review.rating,
+                        callback: function($$v) {
+                          _vm.$set(_vm.review, "rating", $$v)
+                        },
+                        expression: "review.rating"
+                      }
+                    })
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group" }, [
+                  _c(
+                    "label",
+                    { staticClass: "text-muted", attrs: { for: "content" } },
+                    [_vm._v("Describe your experience with")]
+                  ),
+                  _vm._v(" "),
+                  _c("textarea", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.review.content,
+                        expression: "review.content"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { name: "content", id: "", cols: "30", rows: "10" },
+                    domProps: { value: _vm.review.content },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.review, "content", $event.target.value)
+                      }
+                    }
+                  })
+                ]),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  { staticClass: "btn btn-lg btn-primary btn-block" },
+                  [_vm._v("Submit")]
+                )
+              ])
+        ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group" }, [
-      _c("label", { staticClass: "text-muted", attrs: { for: "content" } }, [
-        _vm._v("Describe your experience with")
-      ]),
-      _vm._v(" "),
-      _c("textarea", {
-        staticClass: "form-control",
-        attrs: { name: "content", id: "", cols: "30", rows: "10" }
-      })
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -60722,7 +60799,15 @@ var render = function() {
     { staticClass: "d-flex" },
     [
       _vm._l(_vm.fullStars, function(star) {
-        return _c("i", { key: "full" + star, staticClass: "fas fa-star" })
+        return _c("i", {
+          key: "full" + star,
+          staticClass: "fas fa-star",
+          on: {
+            click: function($event) {
+              return _vm.$emit("input", star)
+            }
+          }
+        })
       }),
       _vm._v(" "),
       _vm.halfStar
@@ -60730,7 +60815,15 @@ var render = function() {
         : _vm._e(),
       _vm._v(" "),
       _vm._l(_vm.emptyStars, function(star) {
-        return _c("i", { key: "empty" + star, staticClass: "far fa-star" })
+        return _c("i", {
+          key: "empty" + star,
+          staticClass: "far fa-star",
+          on: {
+            click: function($event) {
+              return _vm.$emit("input", _vm.fullStars + star)
+            }
+          }
+        })
       })
     ],
     2

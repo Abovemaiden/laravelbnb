@@ -2,8 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Models\Bookings;
 use Carbon\Carbon;
+use App\Models\Bookings;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class BookingsFactory extends Factory
@@ -29,7 +30,7 @@ class BookingsFactory extends Factory
 
         return [
             'from' => $from,
-            'to' => $to,
+            'to' => $to
         ];
     }
 }

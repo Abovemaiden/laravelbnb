@@ -3,7 +3,10 @@
 use App\Http\Controllers\Api\BookableAvailabilityController;
 use App\Http\Controllers\Api\BookableController;
 use App\Http\Controllers\Api\BookableReviewController;
+use App\Http\Controllers\Api\BookingsByReviewController;
 use App\Http\Controllers\Api\BookingsController;
+use App\Http\Controllers\Api\BookingsWithBookablesController;
+use App\Http\Controllers\Api\ReviewController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,8 +27,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 // Bookables API
 Route::apiResource('bookables', BookableController::class);
+Route::get('bookables/{bookable}/availability', BookableAvailabilityController::class);
+Route::get('bookables/{bookable}/reviews', BookableReviewController::class);
 
 // Bookings API
 Route::apiResource('bookings', BookingsController::class);
-Route::get('bookables/{bookable}/availability', BookableAvailabilityController::class);
-Route::get('bookables/{bookable}/reviews', BookableReviewController::class);
+Route::get('bookings-by-review/{reviewKey}', BookingsByReviewController::class);
+Route::get('bookingstest', BookingsWithBookablesController::class);
+
+// Reviews API
+Route::apiResource('reviews', ReviewController::class);

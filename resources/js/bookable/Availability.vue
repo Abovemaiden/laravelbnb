@@ -72,7 +72,7 @@
           })
           .catch(error => {
             if (422 == error.response.status) {
-              this.errors = error.response.data.errors;
+              this.errors = error.response.data.data.errors;
             }
             this.status = error.response.status;
           })
